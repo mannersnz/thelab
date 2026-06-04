@@ -1,6 +1,8 @@
 import { getAvailability } from './data'
 import TrainingRoomClient from './TrainingRoomClient'
 
+export const dynamic = 'force-dynamic'
+
 export default async function TrainingRoomPage() {
   const from = new Date()
   const to = new Date()

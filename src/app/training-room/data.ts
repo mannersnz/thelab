@@ -4,6 +4,11 @@ import type { DayAvailability, SlotKey, SlotStatus, BookingRow } from './types'
 export type { DayAvailability, SlotKey, SlotStatus, BookingRow }
 export { getDayStatus } from './types'
 
+/** Format a Date as YYYY-MM-DD in local time (avoids UTC offset shifting the date) */
+function toLocalDate(d: Date): string {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+}
+
 /** Returns a map of ISO date string -> slot availability for the given range */
 export async function getAvailability(
   from: Date,
@@ -14,8 +19,8 @@ export async function getAvailability(
   const { data, error } = await supabase
     .from('training_room_bookings')
     .select('date, slot, status')
-    .gte('date', from.toISOString().slice(0, 10))
-    .lte('date', to.toISOString().slice(0, 10))
+    .gte('date', toLocalDate(from))
+    .lte('date', toLocalDate(to))
 
   if (error) throw error
 
