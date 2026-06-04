@@ -25,14 +25,15 @@ export interface BookingRow {
   updated_at: string
 }
 
-/** Derive overall day status for calendar colouring */
+/** Derive overall day status for calendar colouring.
+ *  Only 'confirmed' or 'blocked' slots count as taken — enquiries don't colour the calendar. */
 export function getDayStatus(
   day: DayAvailability | undefined
 ): 'available' | 'partial' | 'full' {
   if (!day) return 'available'
   const slots = [day.half_am, day.half_pm, day.full_day]
-  const blocked = slots.filter((s) => s !== 'available').length
-  if (blocked === 0) return 'available'
-  if (blocked === 3) return 'full'
+  const taken = slots.filter((s) => s === 'confirmed' || s === 'blocked').length
+  if (taken === 0) return 'available'
+  if (taken === 3) return 'full'
   return 'partial'
 }

@@ -29,7 +29,14 @@ export async function getAvailability(
     if (!map[row.date]) {
       map[row.date] = { half_am: 'available', half_pm: 'available', full_day: 'available' }
     }
-    map[row.date][row.slot as SlotKey] = row.status as SlotStatus
+    const slot = row.slot as SlotKey
+    const current = map[row.date][slot]
+    const incoming = row.status as SlotStatus
+    // confirmed/blocked always wins over enquiry or available
+    const priority: Record<SlotStatus, number> = { available: 0, enquiry: 1, confirmed: 2, blocked: 2 }
+    if (priority[incoming] >= priority[current]) {
+      map[row.date][slot] = incoming
+    }
   }
   return map
 }
