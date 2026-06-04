@@ -27,7 +27,7 @@ export async function getAvailability(
   const map: Record<string, DayAvailability> = {}
   for (const row of data ?? []) {
     if (!map[row.date]) {
-      map[row.date] = { half_am: 'available', half_pm: 'available', full_day: 'available' }
+      map[row.date] = { half_am: 'available', half_pm: 'available', full_day: 'available', hourly: 'available' }
     }
     const slot = row.slot as SlotKey
     const current = map[row.date][slot]

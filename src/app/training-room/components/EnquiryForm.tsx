@@ -3,7 +3,7 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
-import { enquirySchema, type EnquiryFormData, SLOT_LABELS, SLOT_PRICES } from '../schema'
+import { enquirySchema, type EnquiryFormData, SLOT_LABELS, SLOT_PRICES, SLOTS } from '../schema'
 import type { DayAvailability } from '../types'
 
 interface Props {
@@ -89,12 +89,12 @@ export default function EnquiryForm({ selectedDate, availability, onClose }: Pro
               <div className="form-group">
                 <label>Session type *</label>
                 <div className="slot-options">
-                  {(['half_am', 'half_pm', 'full_day'] as const).map((slot) => {
-                    const slotStatus = daySlots?.[slot]
+                  {SLOTS.map((slot) => {
+                    const slotStatus = daySlots?.[slot as 'half_am' | 'half_pm' | 'full_day']
                     const fullDayTaken = daySlots && (daySlots.full_day === 'confirmed' || daySlots.full_day === 'blocked')
                     const isUnavailable =
                       slotStatus === 'confirmed' || slotStatus === 'blocked' ||
-                      // half slots unavailable if full_day is taken
+                      // half/hourly slots unavailable if full_day is taken
                       (fullDayTaken && slot !== 'full_day') ||
                       // full_day unavailable if either half is taken
                       (slot === 'full_day' && daySlots && (
@@ -122,6 +122,27 @@ export default function EnquiryForm({ selectedDate, availability, onClose }: Pro
                 </div>
                 {errors.slot && <p className="field-error">{String(errors.slot.message)}</p>}
               </div>
+
+              {/* Hours — only shown for hourly bookings */}
+              {selectedSlot === 'hourly' && (
+                <div className="form-group form-group-sm">
+                  <label htmlFor="hours">Number of hours * <span style={{ color: 'var(--tr-text-muted)', fontWeight: 400 }}>($100/hr + GST)</span></label>
+                  <input
+                    id="hours"
+                    type="number"
+                    min={1}
+                    max={8}
+                    placeholder="e.g. 2"
+                    {...register('hours', { valueAsNumber: true })}
+                  />
+                  {Number(watch('hours')) > 0 && (
+                    <p style={{ fontSize: '0.85rem', color: 'var(--tr-cyan)', marginTop: '0.25rem' }}>
+                      Estimated: ${Number(watch('hours')) * 100} + GST
+                    </p>
+                  )}
+                  {errors.hours && <p className="field-error">{errors.hours.message}</p>}
+                </div>
+              )}
 
               {/* Name + Email */}
               <div className="form-row">

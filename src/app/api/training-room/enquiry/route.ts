@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid request', details: parsed.error.issues }, { status: 400 })
   }
 
-  const { date, slot, name, email, org, phone, attendees, message } = parsed.data
+  const { date, slot, name, email, org, phone, attendees, hours, message } = parsed.data
 
   // Check the slot isn't already confirmed/blocked (race condition guard)
   const supabase = await createServiceClient()
@@ -53,6 +53,7 @@ export async function POST(req: NextRequest) {
     enquirer_phone: phone ?? null,
     enquirer_message: message ?? null,
     attendee_count: attendees,
+    hours: hours ?? null,
   })
 
   if (insertError) {
@@ -81,6 +82,7 @@ export async function POST(req: NextRequest) {
         ${org ? `<p><strong>Organisation:</strong> ${org}</p>` : ''}
         ${phone ? `<p><strong>Phone:</strong> ${phone}</p>` : ''}
         <p><strong>Attendees:</strong> ${attendees}</p>
+        ${hours ? `<p><strong>Hours requested:</strong> ${hours} hr${hours > 1 ? 's' : ''} (est. $${hours * 100} + GST)</p>` : ''}
         ${message ? `<p><strong>Notes:</strong> ${message}</p>` : ''}
         <hr/>
         <p><a href="https://thelab.digitaltempo.nz/training-room/admin">View in admin panel →</a></p>

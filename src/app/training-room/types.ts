@@ -1,12 +1,13 @@
 // Shared types — safe to import from both client and server components
 
 export type SlotStatus = 'available' | 'enquiry' | 'confirmed' | 'blocked'
-export type SlotKey = 'half_am' | 'half_pm' | 'full_day'
+export type SlotKey = 'half_am' | 'half_pm' | 'full_day' | 'hourly'
 
 export interface DayAvailability {
   half_am: SlotStatus
   half_pm: SlotStatus
   full_day: SlotStatus
+  hourly: SlotStatus
 }
 
 export interface BookingRow {

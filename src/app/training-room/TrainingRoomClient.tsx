@@ -75,7 +75,7 @@ export default function TrainingRoomClient({ availability }: Props) {
         <div className="tr-container">
           <h2>Simple Pricing</h2>
           <p className="tr-subtitle">All prices + GST. Everything you need is included.</p>
-          <div className="tr-pricing-grid">
+          <div className="tr-pricing-grid" style={{ maxWidth: '1000px' }}>
             <div className="tr-card">
               <span className="tr-card-badge badge-cyan">Half Day</span>
               <h3>Morning or Afternoon</h3>
@@ -110,6 +110,25 @@ export default function TrainingRoomClient({ availability }: Props) {
                 <li>Co-working space for attendees</li>
               </ul>
               <button className="cta cta-purple" onClick={() => document.getElementById('calendar')?.scrollIntoView({ behavior: 'smooth' })}>
+                Check Availability
+              </button>
+            </div>
+
+            <div className="tr-card">
+              <span className="tr-card-badge badge-cyan">Hourly</span>
+              <h3>Pay by the Hour</h3>
+              <p className="tr-tagline">Flexible start time, minimum 1 hour.</p>
+              <p className="tr-price">$100 <span className="tr-unit">/ hr + GST</span></p>
+              <p className="tr-price-note">Tell us your preferred start time</p>
+              <ul className="tr-features-list">
+                <li>WiFi &amp; power throughout</li>
+                <li>Large display / screen</li>
+                <li>Whiteboards &amp; markers</li>
+                <li>Flexible table layouts</li>
+                <li>Kitchen &amp; tea/coffee access</li>
+                <li>Free parking on-site</li>
+              </ul>
+              <button className="cta cta-cyan" onClick={() => document.getElementById('calendar')?.scrollIntoView({ behavior: 'smooth' })}>
                 Check Availability
               </button>
             </div>

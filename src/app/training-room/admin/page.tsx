@@ -40,7 +40,7 @@ export default function AdminPage() {
     const map: Record<string, DayAvailability> = {}
     for (const row of rows) {
       if (!map[row.date]) {
-        map[row.date] = { half_am: 'available', half_pm: 'available', full_day: 'available' }
+        map[row.date] = { half_am: 'available', half_pm: 'available', full_day: 'available', hourly: 'available' }
       }
       map[row.date][row.slot as keyof DayAvailability] = row.status
     }
