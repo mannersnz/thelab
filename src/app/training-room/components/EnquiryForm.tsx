@@ -91,7 +91,16 @@ export default function EnquiryForm({ selectedDate, availability, onClose }: Pro
                 <div className="slot-options">
                   {(['half_am', 'half_pm', 'full_day'] as const).map((slot) => {
                     const slotStatus = daySlots?.[slot]
-                    const isUnavailable = slotStatus === 'confirmed' || slotStatus === 'blocked'
+                    const fullDayTaken = daySlots && (daySlots.full_day === 'confirmed' || daySlots.full_day === 'blocked')
+                    const isUnavailable =
+                      slotStatus === 'confirmed' || slotStatus === 'blocked' ||
+                      // half slots unavailable if full_day is taken
+                      (fullDayTaken && slot !== 'full_day') ||
+                      // full_day unavailable if either half is taken
+                      (slot === 'full_day' && daySlots && (
+                        daySlots.half_am === 'confirmed' || daySlots.half_am === 'blocked' ||
+                        daySlots.half_pm === 'confirmed' || daySlots.half_pm === 'blocked'
+                      ))
                     return (
                       <label
                         key={slot}

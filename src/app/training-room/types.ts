@@ -26,14 +26,27 @@ export interface BookingRow {
 }
 
 /** Derive overall day status for calendar colouring.
- *  Only 'confirmed' or 'blocked' slots count as taken — enquiries don't colour the calendar. */
+ *  Business rules:
+ *  - full_day confirmed/blocked = whole day is full
+ *  - half_am AND half_pm both confirmed/blocked = whole day is full
+ *  - either half confirmed/blocked = partial
+ *  - enquiries alone = available (don't affect public calendar)
+ */
 export function getDayStatus(
   day: DayAvailability | undefined
 ): 'available' | 'partial' | 'full' {
   if (!day) return 'available'
-  const slots = [day.half_am, day.half_pm, day.full_day]
-  const taken = slots.filter((s) => s === 'confirmed' || s === 'blocked').length
-  if (taken === 0) return 'available'
-  if (taken === 3) return 'full'
-  return 'partial'
+
+  const taken = (s: SlotStatus) => s === 'confirmed' || s === 'blocked'
+
+  // Full day slot alone fills the whole day
+  if (taken(day.full_day)) return 'full'
+
+  // Both halves taken = full day
+  if (taken(day.half_am) && taken(day.half_pm)) return 'full'
+
+  // Either half taken = partial
+  if (taken(day.half_am) || taken(day.half_pm)) return 'partial'
+
+  return 'available'
 }
