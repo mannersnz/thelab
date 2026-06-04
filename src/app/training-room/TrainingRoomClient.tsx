@@ -54,6 +54,22 @@ export default function TrainingRoomClient({ availability }: Props) {
         </div>
       </section>
 
+      {/* Room photo */}
+      <section className="tr-room-photo">
+        <div className="tr-container">
+          <div className="tr-photo-wrap">
+            <img
+              src="/training-room.jpg"
+              alt="The training room at Mahitahi Colab Māpua — flexible tables, large displays, polished concrete floors"
+              className="tr-photo"
+            />
+            <div className="tr-photo-caption">
+              Mahitahi Colab Māpua — flexible layout, dual displays, natural light
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Pricing */}
       <section className="tr-pricing" id="pricing">
         <div className="tr-container">

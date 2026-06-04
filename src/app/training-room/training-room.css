@@ -115,6 +115,35 @@
   color: var(--tr-text-muted);
 }
 
+/* ── Room photo ── */
+.tr-room-photo {
+  padding: 0 0 4rem;
+}
+.tr-photo-wrap {
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--tr-border);
+  position: relative;
+}
+.tr-photo {
+  width: 100%;
+  height: auto;
+  max-height: 520px;
+  object-fit: cover;
+  object-position: center 40%;
+  display: block;
+}
+.tr-photo-caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%);
+  color: rgba(255,255,255,0.75);
+  font-size: 0.8rem;
+  padding: 2rem 1.25rem 0.875rem;
+}
+
 /* ── Pricing ── */
 .tr-pricing {
   padding: 3rem 0 4rem;
