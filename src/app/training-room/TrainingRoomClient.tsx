@@ -99,7 +99,7 @@ export default function TrainingRoomClient({ availability }: Props) {
               <span className="tr-card-badge badge-purple">Full Day</span>
               <h3>All-Day Session</h3>
               <p className="tr-tagline">Up to 8 hours. Room to breathe.</p>
-              <p className="tr-price">$595 <span className="tr-unit">+ GST</span></p>
+              <p className="tr-price">$495 <span className="tr-unit">+ GST</span></p>
               <p className="tr-price-note">8am – 5pm, full use of the space</p>
               <ul className="tr-features-list">
                 <li>Everything in half-day</li>

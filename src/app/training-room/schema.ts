@@ -36,6 +36,6 @@ export const SLOT_LABELS: Record<SlotType, string> = {
 export const SLOT_PRICES: Record<SlotType, string> = {
   half_am: '$295 + GST',
   half_pm: '$295 + GST',
-  full_day: '$595 + GST',
+  full_day: '$495 + GST',
   hourly:  '$100/hr + GST',
 }
