@@ -353,12 +353,33 @@
   background: rgba(34, 211, 238, 0.04);
 }
 .fc .fc-day-past { opacity: 0.4; cursor: not-allowed; }
+.fc .fc-day-today { box-shadow: inset 0 0 0 2px var(--tr-cyan); }
 .fc .fc-day-today .fc-daygrid-day-number { color: var(--tr-cyan); font-weight: 700; }
 
-/* Slot colours */
-.fc-day-available { background: rgba(34, 211, 238, 0.08) !important; }
-.fc-day-partial { background: rgba(251, 191, 36, 0.12) !important; }
-.fc-day-full { background: rgba(239, 68, 68, 0.12) !important; }
+/* Day status colours — every bookable day declares its status */
+.fc-day-free { background: rgba(34, 197, 94, 0.16) !important; }
+.fc-day-part { background: rgba(251, 191, 36, 0.20) !important; }
+.fc-day-full { background: rgba(239, 68, 68, 0.20) !important; }
+
+/* Corner status label (Free / Part / Full) — pinned to the bottom of the cell.
+   Neutralise FullCalendar's relative-positioned day number so the label
+   anchors to the day frame, not the number. */
+.fc .fc-daygrid-day-frame { position: relative; }
+.fc .fc-daygrid-day-top,
+.fc .fc-daygrid-day-number { position: static; }
+.day-status-label {
+  position: absolute;
+  bottom: 4px;
+  right: 6px;
+  font-size: 0.6rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  pointer-events: none;
+}
+.fc-day-free .day-status-label { color: #4ade80; }
+.fc-day-part .day-status-label { color: #fbbf24; }
+.fc-day-full .day-status-label { color: #f87171; }
 
 /* Legend */
 .calendar-legend {
@@ -380,9 +401,9 @@
   height: 12px;
   border-radius: 3px;
 }
-.legend-available .legend-dot { background: rgba(34, 211, 238, 0.5); }
-.legend-partial .legend-dot { background: rgba(251, 191, 36, 0.6); }
-.legend-full .legend-dot { background: rgba(239, 68, 68, 0.6); }
+.legend-free .legend-dot { background: rgba(34, 197, 94, 0.6); }
+.legend-part .legend-dot { background: rgba(251, 191, 36, 0.7); }
+.legend-full .legend-dot { background: rgba(239, 68, 68, 0.7); }
 
 /* ── Features ── */
 .tr-features-section {

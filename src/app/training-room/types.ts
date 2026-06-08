@@ -51,3 +51,22 @@ export function getDayStatus(
 
   return 'available'
 }
+
+/** Maps a day status to its calendar cell class and corner label.
+ *  Single source of truth shared by the public and admin calendars. */
+export const DAY_STATUS_META: Record<
+  'available' | 'partial' | 'full',
+  { className: string; label: string }
+> = {
+  available: { className: 'fc-day-free', label: 'Free' },
+  partial:   { className: 'fc-day-part', label: 'Part' },
+  full:      { className: 'fc-day-full', label: 'Full' },
+}
+
+/** Format a Date as a local 'YYYY-MM-DD' string.
+ *  Avoids the UTC day-shift that toISOString() causes in ahead-of-UTC zones,
+ *  and matches the date strings FullCalendar's dateClick reports. */
+export function localDateStr(d: Date): string {
+  const pad = (n: number) => String(n).padStart(2, '0')
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
+}

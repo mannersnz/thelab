@@ -4,7 +4,7 @@ import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import type { DayAvailability } from '../types'
-import { getDayStatus } from '../types'
+import { getDayStatus, DAY_STATUS_META, localDateStr } from '../types'
 
 interface Props {
   availability: Record<string, DayAvailability>
@@ -13,29 +13,13 @@ interface Props {
   onAdminToggle?: (date: string, currentStatus: DayAvailability) => void
 }
 
-const STATUS_COLORS = {
-  available: 'rgba(34, 211, 238, 0.18)',
-  partial:   'rgba(251, 191, 36, 0.25)',
-  full:      'rgba(239, 68, 68, 0.25)',
-}
-
 export default function AvailabilityCalendar({
   availability,
   onDateSelect,
   adminMode = false,
   onAdminToggle,
 }: Props) {
-  const today = new Date().toISOString().slice(0, 10)
-
-  const events = Object.entries(availability).map(([date, slots]) => {
-    const status = getDayStatus(slots)
-    return {
-      date,
-      display: 'background',
-      backgroundColor: STATUS_COLORS[status],
-      borderColor: 'transparent',
-    }
-  })
+  const today = localDateStr(new Date())
 
   return (
     <div className="fc-wrapper">
@@ -44,13 +28,28 @@ export default function AvailabilityCalendar({
         initialView="dayGridMonth"
         headerToolbar={{ left: 'prev', center: 'title', right: 'next' }}
         height="auto"
-        events={events}
         validRange={{ start: today }}
+        dayCellClassNames={(arg) => {
+          const dateStr = localDateStr(arg.date)
+          if (dateStr < today) return []
+          return [DAY_STATUS_META[getDayStatus(availability[dateStr])].className]
+        }}
+        dayCellContent={(arg) => {
+          const dateStr = localDateStr(arg.date)
+          if (dateStr < today) return arg.dayNumberText
+          const { label } = DAY_STATUS_META[getDayStatus(availability[dateStr])]
+          return (
+            <>
+              {arg.dayNumberText}
+              <span className="day-status-label">{label}</span>
+            </>
+          )
+        }}
         dateClick={(info) => {
           if (info.dateStr < today) return
           if (adminMode && onAdminToggle) {
             onAdminToggle(info.dateStr, availability[info.dateStr] ?? {
-              half_am: 'available', half_pm: 'available', full_day: 'available'
+              half_am: 'available', half_pm: 'available', full_day: 'available', hourly: 'available'
             })
           } else {
             onDateSelect(info.dateStr)
@@ -60,16 +59,16 @@ export default function AvailabilityCalendar({
 
       {/* Legend */}
       <div className="calendar-legend">
-        <span className="legend-item">
-          <span className="legend-dot" style={{ background: STATUS_COLORS.available }} />
-          Available
+        <span className="legend-item legend-free">
+          <span className="legend-dot" />
+          Free
         </span>
-        <span className="legend-item">
-          <span className="legend-dot" style={{ background: STATUS_COLORS.partial }} />
-          Partially booked
+        <span className="legend-item legend-part">
+          <span className="legend-dot" />
+          Partly booked
         </span>
-        <span className="legend-item">
-          <span className="legend-dot" style={{ background: STATUS_COLORS.full }} />
+        <span className="legend-item legend-full">
+          <span className="legend-dot" />
           Fully booked
         </span>
       </div>

@@ -5,7 +5,7 @@ import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import type { DayAvailability } from '../../types'
-import { getDayStatus } from '../../types'
+import { getDayStatus, DAY_STATUS_META, localDateStr } from '../../types'
 import { SLOT_LABELS } from '../../schema'
 import '../../../training-room/training-room.css'
 
@@ -19,13 +19,7 @@ const ALL_SLOTS = ['half_am', 'half_pm', 'full_day'] as const
 export default function AdminCalendar({ availability, onRefresh }: Props) {
   const [loading, setLoading] = useState(false)
   const [selectedDate, setSelectedDate] = useState<string | null>(null)
-  const today = new Date().toISOString().slice(0, 10)
-
-  const events = Object.entries(availability).map(([date, slots]) => ({
-    date,
-    display: 'background',
-    classNames: [`fc-day-${getDayStatus(slots)}`],
-  }))
+  const today = localDateStr(new Date())
 
   async function toggleSlot(date: string, slot: string, currentlyBlocked: boolean) {
     setLoading(true)
@@ -39,7 +33,7 @@ export default function AdminCalendar({ availability, onRefresh }: Props) {
   }
 
   const daySlots = selectedDate ? (availability[selectedDate] ?? {
-    half_am: 'available', half_pm: 'available', full_day: 'available'
+    half_am: 'available', half_pm: 'available', full_day: 'available', hourly: 'available'
   }) : null
 
   return (
@@ -50,12 +44,43 @@ export default function AdminCalendar({ availability, onRefresh }: Props) {
           initialView="dayGridMonth"
           headerToolbar={{ left: 'prev', center: 'title', right: 'next' }}
           height="auto"
-          events={events}
           validRange={{ start: today }}
+          dayCellClassNames={(arg) => {
+            const dateStr = localDateStr(arg.date)
+            if (dateStr < today) return []
+            return [DAY_STATUS_META[getDayStatus(availability[dateStr])].className]
+          }}
+          dayCellContent={(arg) => {
+            const dateStr = localDateStr(arg.date)
+            if (dateStr < today) return arg.dayNumberText
+            const { label } = DAY_STATUS_META[getDayStatus(availability[dateStr])]
+            return (
+              <>
+                {arg.dayNumberText}
+                <span className="day-status-label">{label}</span>
+              </>
+            )
+          }}
           dateClick={(info) => {
             if (info.dateStr >= today) setSelectedDate(info.dateStr)
           }}
         />
+
+        {/* Legend */}
+        <div className="calendar-legend">
+          <span className="legend-item legend-free">
+            <span className="legend-dot" />
+            Free
+          </span>
+          <span className="legend-item legend-part">
+            <span className="legend-dot" />
+            Partly booked
+          </span>
+          <span className="legend-item legend-full">
+            <span className="legend-dot" />
+            Fully booked
+          </span>
+        </div>
       </div>
 
       {selectedDate && daySlots && (
